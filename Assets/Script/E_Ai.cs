@@ -8,7 +8,6 @@ public class E_Ai : MonoBehaviour
 {
     // Start is called before the first frame update
     Rigidbody2D rb_e;
-    GameObject trigger;
     Rigidbody2D player0;
     bool attack = false;
     float speed1 = 1.5f;
