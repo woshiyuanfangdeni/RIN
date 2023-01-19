@@ -114,6 +114,7 @@ public class Player : MonoBehaviour
             {
                 isdash = false;
                 Wantdash = false;
+                this.gameObject.layer = 6;
             }
         }
     }
@@ -123,6 +124,7 @@ public class Player : MonoBehaviour
             if (dashtimeleft >= 0)
             //transform.Translate(transform.right * Time.deltaTime * dashtime*Dashdirection*dashspeed);
             {
+                this.gameObject.layer =9;
                 rb.velocity = new Vector2(dashspeed * Dashdirection, 0);
             }           
     }
