@@ -114,6 +114,7 @@ public class Player : MonoBehaviour
             {
                 isdash = false;
                 Wantdash = false;
+                this.gameObject.layer = 6;
             }
         }
     }
@@ -123,6 +124,7 @@ public class Player : MonoBehaviour
             if (dashtimeleft >= 0)
             //transform.Translate(transform.right * Time.deltaTime * dashtime*Dashdirection*dashspeed);
             {
+                this.gameObject.layer =9;
                 rb.velocity = new Vector2(dashspeed * Dashdirection, 0);
             }           
     }
@@ -144,12 +146,10 @@ public class Player : MonoBehaviour
         //我是分界线，以下为优化跳跃手感内容
         if (Input.GetButtonDown("Jump") && rb.velocity.y < 0 && jumpCount > 0)
         {
-            Debug.Log("111");
             rb.velocity = Vector2.up * 7;
         }
         else if (rb.velocity.y < 0 && !Input.GetButtonDown("Jump"))
-        {
-            Debug.Log("222");
+        {          
             if (jumpCount > 0) rb.velocity += Vector2.up * Physics2D.gravity.y * fallMultiplier * Time.deltaTime;
             if (jumpCount == 0) rb.gravityScale = fallMultiplier;
         }
