@@ -4003,9 +4003,9 @@ MonoBehaviour:
   ground:
     serializedVersion: 2
     m_Bits: 256
-  fallMultiplier: 6
-  lowJumpMultiplier: 4
-  fallMultiplierElse: 3
+  fallMultiplier: 5
+  lowJumpMultiplier: 2
+  fallMultiplierElse: 5
   jumpCount: 2
   anim: {fileID: 1451305055}
   N_hitbox_1: {fileID: 31650551}

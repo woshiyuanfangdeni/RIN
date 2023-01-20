@@ -9,6 +9,10 @@ public class Attack_1 : StateMachineBehaviour
     //{
     //    
     //}
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        animator.SetFloat("ATTACK", 1);
+    }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -32,6 +36,7 @@ public class Attack_1 : StateMachineBehaviour
     {
         animator.SetBool("WantAttack_1", false);
         animator.SetBool("PrepareAttack", false);
+        animator.SetFloat("ATTACK", 0);
     }
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

@@ -13,10 +13,10 @@ public class Player : MonoBehaviour
     Vector2 inputpos;
     public static Vector2 transfor;
     Vector3 Playertran;
-    bool isdash=false;//是否冲刺
-    float dashtime=0.2f;
-    float dashtimeleft,dashCD=1f,dashLast=-10f;
-    float dashspeed=40f;
+    bool isdash = false;//是否冲刺
+    float dashtime = 0.2f;
+    float dashtimeleft, dashCD = 1f, dashLast = -10f;
+    float dashspeed = 40f;
     int Dashdirection;
     float Force = 10f;
     bool Wantdash = false;
@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
     public int jumpCount = 2;//跳跃次数
     private bool isJump;//表示跳跃状态
     public Animator anim;//静态解决方案
-    public GameObject N_hitbox_1,N_hitbox_2,N_hitbox_3;
+    public GameObject N_hitbox_1, N_hitbox_2, N_hitbox_3;
     private void Awake()
     {
         player = this;
@@ -53,21 +53,21 @@ public class Player : MonoBehaviour
     void Update()
     {
         transfor = this.gameObject.transform.position;
-        if(!isdash)//玩家行动在这里面写0.0
-        { 
+        if (!isdash)//玩家行动在这里面写0.0
+        {
             PlayerJumpByTwice();
             MoveObject();
-            if (Input.GetKeyDown(KeyCode.J) && anim.GetBool("isAttack") == false)
+            if (Input.GetKeyDown(KeyCode.J))
             {
                 anim.SetBool("PrepareAttack", true);
                 Debug.Log("succeesful attack");
-                StartCoroutine(NormalAttack());
-            }
+            }          
+            NormalAttack();
         }
         if (Input.GetKeyDown(KeyCode.L))
             if (Time.time >= (dashLast + dashCD))
-                Wantdash =true;
-        if(Wantdash)
+                Wantdash = true;
+        if (Wantdash)
             Dash();
     }
     private void FixedUpdate()//固定为每秒50次检测的固定补足更新
@@ -112,7 +112,7 @@ public class Player : MonoBehaviour
                 Dashready();
             }
             Rush();
-            
+
         }
         if (isdash)
         {
@@ -131,9 +131,9 @@ public class Player : MonoBehaviour
             if (dashtimeleft >= 0)
             //transform.Translate(transform.right * Time.deltaTime * dashtime*Dashdirection*dashspeed);
             {
-                this.gameObject.layer =9;
+                this.gameObject.layer = 9;
                 rb.velocity = new Vector2(dashspeed * Dashdirection, 0);
-            }           
+            }
     }
     void Dashready()
     {
@@ -170,10 +170,12 @@ public class Player : MonoBehaviour
         //我是分界线，以下为优化跳跃手感内容
         if (Input.GetButtonDown("Jump") && rb.velocity.y < 0 && jumpCount > 0)
         {
+            Debug.Log("111");
             rb.velocity = Vector2.up * 7;
         }
         else if (rb.velocity.y < 0 && !Input.GetButtonDown("Jump"))
-        {          
+        {
+            Debug.Log("222");
             if (jumpCount > 0) rb.velocity += Vector2.up * Physics2D.gravity.y * fallMultiplier * Time.deltaTime;
             if (jumpCount == 0) rb.gravityScale = fallMultiplier;
         }
@@ -207,34 +209,41 @@ public class Player : MonoBehaviour
     void Hitbox_use(GameObject hitbox)
     {
         hitbox.SetActive(true);
-       // hitbox.SetActive(false);
     }
-    IEnumerator NormalAttack()
+    void Hitbox_clear(GameObject hitbox)
     {
-        for (int i= 0;i<3;i++)
+        hitbox.SetActive(false);
+    }
+    void NormalAttack()
+    {
+        switch (anim.GetFloat("ATTACK"))
         {
-            if (anim.GetBool("WantAttack_3") || anim.GetBool("PrepareAttack"))
-            {
-                Hitbox_use(N_hitbox_1);
-                continue;
-            }
-        if(anim.GetBool("WantAttack_1"))
-            {
-                Hitbox_use(N_hitbox_2);
-                continue;
-            }
-        if(anim.GetBool("WantAttack_2"))
-            {
-                Hitbox_use(N_hitbox_3);
-                continue;
-            }
-            if (!anim.GetBool("WantAttck_1") && !anim.GetBool("WantAttack_2") && !anim.GetBool("WantAttack_3") && anim.GetBool("PrepareAttack"))
-                break;               
-            yield return new WaitForSeconds(0.75f);
+            case 1:
+                {
+                    Hitbox_clear(N_hitbox_3);
+                    Hitbox_use(N_hitbox_1);
+                    break;
+                }
+            case 2:
+                {
+                    Hitbox_clear(N_hitbox_1);
+                    Hitbox_use(N_hitbox_2);
+                    break;
+                }
+            case 3:
+                {
+                    Hitbox_clear(N_hitbox_1);
+                    Hitbox_clear(N_hitbox_2);
+                    Hitbox_use(N_hitbox_3);
+                    break;
+                }
+                default:
+                Hitbox_clear(N_hitbox_3);
+                Hitbox_clear(N_hitbox_2);
+                Hitbox_clear(N_hitbox_1);
+                break;
+                
         }
-        
-            
-      
-
     }
 }
+   

@@ -9,6 +9,10 @@ public class Attack_3 : StateMachineBehaviour
     //{
     //    
     //}
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        animator.SetFloat("ATTACK", 3);
+    }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -18,8 +22,8 @@ public class Attack_3 : StateMachineBehaviour
     {
         if (Input.GetKeyDown(KeyCode.J))
         {
-            animator.SetBool("WantAttack_3", true);
-            
+            animator.SetBool("WantAttack_3", true);            
+
         }        
     }
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
@@ -28,9 +32,10 @@ public class Attack_3 : StateMachineBehaviour
     //    
     //}
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-{
-    animator.SetBool("WantAttack_3", false);
-        animator.SetBool("PrepareAttack", false);
+    {
+            animator.SetBool("WantAttack_3", false);
+            animator.SetBool("PrepareAttack", false);
+            animator.SetFloat("ATTACK", 0);
     }
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //}
