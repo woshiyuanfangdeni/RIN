@@ -78,7 +78,7 @@ public class E_Ai : MonoBehaviour
         }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag == "player") 
+        if (collision.tag == "Player") 
         {
            player0 = collision.GetComponent<Rigidbody2D>();
             attack= true;
@@ -86,7 +86,7 @@ public class E_Ai : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "player")
+        if (collision.tag == "Player")
         {
             attack = false;
         }
