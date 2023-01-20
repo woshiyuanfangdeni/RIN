@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     Vector2 inputpos;
     public static Vector2 transfor;
     Vector3 Playertran;
-    bool isdash;
+    bool isdash=false;//是否冲刺
     float dashtime=0.2f;
     float dashtimeleft,dashCD=1f,dashLast=-10f;
     float dashspeed=40f;
@@ -34,6 +34,8 @@ public class Player : MonoBehaviour
     //以下为多段跳功能的实现
     public int jumpCount = 2;//跳跃次数
     private bool isJump;//表示跳跃状态
+    public Animator anim;//静态解决方案
+    public GameObject N_hitbox_1,N_hitbox_2,N_hitbox_3;
     private void Awake()
     {
         player = this;
@@ -50,12 +52,17 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-
         transfor = this.gameObject.transform.position;
         if(!isdash)//玩家行动在这里面写0.0
         { 
             PlayerJumpByTwice();
-            MoveObject();         
+            MoveObject();
+            if (Input.GetKeyDown(KeyCode.J) && anim.GetBool("isAttack") == false)
+            {
+                anim.SetBool("PrepareAttack", true);
+                Debug.Log("succeesful attack");
+                StartCoroutine(NormalAttack());
+            }
         }
         if (Input.GetKeyDown(KeyCode.L))
             if (Time.time >= (dashLast + dashCD))
@@ -134,10 +141,27 @@ public class Player : MonoBehaviour
         dashtimeleft = dashtime;
         dashLast = Time.time;
     }
-    void Attack()
+    /*void NormalAttack()
     {
-
-    }
+        anim.SetBool("isAttack",true);
+        Hitbox_use(N_hitbox_1);
+ 
+        if (Input.GetKey(KeyCode.J) && anim.GetBool("isAttack"))
+        {
+            anim.SetBool("isAttack_1", true);
+            Hitbox_use(N_hitbox_2);
+        
+            if (Input.GetKey(KeyCode.J) && anim.GetBool("isAttack_1"))
+            {
+                anim.SetBool("isAttack_2", true );
+                Hitbox_use(N_hitbox_3);
+                anim.SetBool("isAttack_2", false);
+              
+            }
+            anim.SetBool("isAttack_1", false);
+        }      
+        anim.SetBool("isAttack", false);
+    }*/
 
     void PlayerJumpByTwice()//二段跳
     {
@@ -181,5 +205,38 @@ public class Player : MonoBehaviour
             jumpCount--;
             isJump = false;
         }
+    }
+    void Hitbox_use(GameObject hitbox)
+    {
+        hitbox.SetActive(true);
+       // hitbox.SetActive(false);
+    }
+    IEnumerator NormalAttack()
+    {
+        for (int i= 0;i<3;i++)
+        {
+            if (anim.GetBool("WantAttack_3") || anim.GetBool("PrepareAttack"))
+            {
+                Hitbox_use(N_hitbox_1);
+                continue;
+            }
+        if(anim.GetBool("WantAttack_1"))
+            {
+                Hitbox_use(N_hitbox_2);
+                continue;
+            }
+        if(anim.GetBool("WantAttack_2"))
+            {
+                Hitbox_use(N_hitbox_3);
+                continue;
+            }
+            if (!anim.GetBool("WantAttck_1") && !anim.GetBool("WantAttack_2") && !anim.GetBool("WantAttack_3") && anim.GetBool("PrepareAttack"))
+                break;               
+            yield return new WaitForSeconds(0.75f);
+        }
+        
+            
+      
+
     }
 }
