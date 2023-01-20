@@ -170,12 +170,10 @@ public class Player : MonoBehaviour
         //我是分界线，以下为优化跳跃手感内容
         if (Input.GetButtonDown("Jump") && rb.velocity.y < 0 && jumpCount > 0)
         {
-            Debug.Log("111");
             rb.velocity = Vector2.up * 7;
         }
         else if (rb.velocity.y < 0 && !Input.GetButtonDown("Jump"))
-        {
-            Debug.Log("222");
+        {          
             if (jumpCount > 0) rb.velocity += Vector2.up * Physics2D.gravity.y * fallMultiplier * Time.deltaTime;
             if (jumpCount == 0) rb.gravityScale = fallMultiplier;
         }
