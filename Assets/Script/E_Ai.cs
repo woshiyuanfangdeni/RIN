@@ -72,28 +72,10 @@ public class E_Ai : MonoBehaviour
                 rb_e.transform.localScale = enemyscale;
             }
         }
-<<<<<<< HEAD
-=======
-
-
-
-        }
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.tag == "Player") 
-        {
-           player0 = collision.GetComponent<Rigidbody2D>();
-            attack= true;
-        }
->>>>>>> dc0dcd2115d320f57302634a08ba3cff7d1a7f70
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-<<<<<<< HEAD
         if (collision.gameObject.tag == "Hitbox")
-=======
-        if (collision.tag == "Player")
->>>>>>> dc0dcd2115d320f57302634a08ba3cff7d1a7f70
         {
 
             if (collision.transform.position.x > this.transform.position.x)
