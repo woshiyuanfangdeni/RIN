@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     int Dashdirection;
     float Force = 10f;
     bool Wantdash = false;
+    bool isattack=false;
     //ÒÔÏÂÎªÌøÔ¾¼ì²â
     [Range(1, 10)]
     private float jumpSpeed = 8f;
@@ -57,12 +58,15 @@ public class Player : MonoBehaviour
         {
             PlayerJumpByTwice();
             MoveObject();
-            if (Input.GetKeyDown(KeyCode.J))
+            if (Input.GetKeyDown(KeyCode.J))//¹¥»÷
             {
+                isattack = true;
                 anim.SetBool("PrepareAttack", true);
                 Debug.Log("succeesful attack");
-            }          
+            } 
+            //ÕýÔÚ¹¥»÷
             NormalAttack();
+            Debug.Log(isattack);
         }
         if (Input.GetKeyDown(KeyCode.L))
             if (Time.time >= (dashLast + dashCD))
@@ -214,7 +218,7 @@ public class Player : MonoBehaviour
     {
         hitbox.SetActive(false);
     }
-    void NormalAttack()
+    void NormalAttack()//¹¥»÷
     {
         switch (anim.GetFloat("ATTACK"))
         {
@@ -237,10 +241,11 @@ public class Player : MonoBehaviour
                     Hitbox_use(N_hitbox_3);
                     break;
                 }
-                default:
+                default:               
+                isattack = false;
                 Hitbox_clear(N_hitbox_3);
                 Hitbox_clear(N_hitbox_2);
-                Hitbox_clear(N_hitbox_1);
+                Hitbox_clear(N_hitbox_1);             
                 break;
                 
         }

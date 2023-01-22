@@ -19,15 +19,17 @@ public class E_AI_Range : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag == "player")
+    
+        if (collision.tag == "Player")
         {
             E_Ai.player0 = collision.GetComponent<Rigidbody2D>();
-            E_Ai.attack = true;         
+            E_Ai.attack = true;
+            
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "player")
+        if (collision.tag == "Player")
         {
             E_Ai.attack = false;
         }

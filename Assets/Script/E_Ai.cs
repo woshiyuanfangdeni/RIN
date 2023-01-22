@@ -8,8 +8,8 @@ public class E_Ai : MonoBehaviour
 {
     // Start is called before the first frame update
     Rigidbody2D rb_e;
-    Rigidbody2D player0;
-    bool attack = false;
+    public Rigidbody2D player0;
+    public bool attack = false;
     float speed1 = 1.5f;
     private float tick1 = 2f;
     int temp = 1;
@@ -76,23 +76,21 @@ public class E_Ai : MonoBehaviour
 
 
         }
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Player") 
+        if(collision.tag=="Hitbox")//Κά»χ
         {
-           player0 = collision.GetComponent<Rigidbody2D>();
-            attack= true;
+            if(collision.transform.position.x>this.transform.position.x)
+            {
+                rb_e.AddForce(new Vector2(-100, 1) , ForceMode2D.Impulse);
+            }
+            else
+            {
+                rb_e.AddForce(new Vector2(100, 1) , ForceMode2D.Impulse);
+            }
         }
     }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.tag == "Player")
-        {
-            attack = false;
-        }
-
-    }
-    
+  
     void Attack()
     {
 
