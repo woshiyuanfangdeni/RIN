@@ -202,7 +202,7 @@ public class Player : MonoBehaviour
         }
         if (isJump)
         {
-            jumpCount--;
+            jumpCount--;//这里有点问题，第一次跳跃时无法检测到跳跃，二段跳时才能检测到，如果要使用二段跳动画的话直接在这里加上调用二段跳动画就可以了
             rb.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
             jumpCount--;
             isJump = false;
