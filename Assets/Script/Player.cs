@@ -18,9 +18,9 @@ public class Player : MonoBehaviour
     float dashtimeleft, dashCD = 1f, dashLast = -10f;
     float dashspeed = 40f;
     int Dashdirection;
-    float Force = 10f;
+    float Force = 5f;
     bool Wantdash = false;
-    bool isattack=false;
+    bool isattack = false;
     //以下为跳跃检测
     [Range(1, 10)]
     private float jumpSpeed = 8f;
@@ -38,9 +38,12 @@ public class Player : MonoBehaviour
     //以下为远程敌人攻击到玩家时玩家受击后撤的功能实现
     public Transform player_0;//获取玩家的位置组件
     public Transform farAttackEnemy;//获取敌人的位置组件
-
+    private float BeattackTime = 0.2f;//受击时长
+    private float beattackcd = 2f;//被连续击中后的免疫时间
     public Animator anim;//静态解决方案
     public GameObject N_hitbox_1, N_hitbox_2, N_hitbox_3;
+    bool beattack = false;
+    int direction_e_p = 0;
     private void Awake()
     {
         player = this;
@@ -56,32 +59,48 @@ public class Player : MonoBehaviour
     void Update()
     {
         transfor = this.gameObject.transform.position;
-        if (!isdash)//玩家行动在这里面写0.0
+        PlayerMove();
+        if (!beattack)
         {
-            PlayerJumpByTwice();
-            MoveObject();
-            if (Input.GetKeyDown(KeyCode.J))//攻击
+            if (!isdash)//玩家行动在这里面写0.0
             {
-                isattack = true;
-                anim.SetBool("PrepareAttack", true);
-                Debug.Log("succeesful attack");
-            } 
-            //正在攻击
-            NormalAttack();
-            Debug.Log(isattack);
+                PlayerJumpByTwice();
+                MoveObject();
+                if (Input.GetKeyDown(KeyCode.J))//攻击
+                {
+                    isattack = true;
+                    anim.SetBool("PrepareAttack", true);
+                    Debug.Log("succeesful attack");
+                }
+                //正在攻击
+                NormalAttack();
+                Debug.Log(isattack);
+            }
+            if (Input.GetKeyDown(KeyCode.L))
+                if (Time.time >= (dashLast + dashCD))
+                    Wantdash = true;
+            if (Wantdash)
+                Dash();
         }
-        if (Input.GetKeyDown(KeyCode.L))
-            if (Time.time >= (dashLast + dashCD))
-                Wantdash = true;
-        if (Wantdash)
-            Dash();
+        if (beattack)
+        {
+            if (BeattackTime == 0.2f)
+                PlayerBeAttacking();
+            BeattackTime -= Time.deltaTime;
+            if (BeattackTime <= 0)
+            {
+                beattack = false;
+                BeattackTime = 0.2f;
+                GetComponent<SpriteRenderer>().color = Color.white;
+            }
+        }
     }
     private void FixedUpdate()//固定为每秒50次检测的固定补足更新
     {
         isGround = Physics2D.OverlapCircle(groundCheck.position, 0.1f, ground);//地面检测
     }
     public void MoveObject()
-    {
+    {       
         inputpos = rb.velocity;
         inputpos.x = Input.GetAxisRaw("Horizontal") * speed;
         rb.velocity = inputpos;
@@ -97,17 +116,19 @@ public class Player : MonoBehaviour
         }
         rb.transform.localScale = Playertran;
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)//玩家的受击！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
     {
-        int direction_e_p = 0;
-        if (collision.gameObject.transform.position.x - this.gameObject.transform.position.x >= 0)
-            direction_e_p = -1;
-        if (collision.gameObject.transform.position.x - this.gameObject.transform.position.x < 0)
-            direction_e_p = 1;
-        if (collision.gameObject.tag == "enemy")
+        if (collision.gameObject.tag == "enemy" || collision.gameObject.tag == "Bullet")// 角色受击！！！！！
         {
-            rb.AddForce(new Vector2(direction_e_p * Force * 250, 200f), ForceMode2D.Force);
+            beattack = true;
+            if (collision.gameObject.transform.position.x - this.gameObject.transform.position.x >= 0)
+                direction_e_p = -1;
+            if (collision.gameObject.transform.position.x - this.gameObject.transform.position.x < 0)
+                direction_e_p = 1;
+            GetComponent<SpriteRenderer>().color = Color.red;
+            rb.AddForce(new Vector2(direction_e_p * Force, 2f), ForceMode2D.Impulse);
         }
+
     }
     void Dash()
     {
@@ -146,27 +167,6 @@ public class Player : MonoBehaviour
         dashtimeleft = dashtime;
         dashLast = Time.time;
     }
-    /*void NormalAttack()
-    {
-        anim.SetBool("isAttack",true);
-        Hitbox_use(N_hitbox_1);
- 
-        if (Input.GetKey(KeyCode.J) && anim.GetBool("isAttack"))
-        {
-            anim.SetBool("isAttack_1", true);
-            Hitbox_use(N_hitbox_2);
-        
-            if (Input.GetKey(KeyCode.J) && anim.GetBool("isAttack_1"))
-            {
-                anim.SetBool("isAttack_2", true );
-                Hitbox_use(N_hitbox_3);
-                anim.SetBool("isAttack_2", false);
-              
-            }
-            anim.SetBool("isAttack_1", false);
-        }      
-        anim.SetBool("isAttack", false);
-    }*/
     void PlayerJumpByTwice()//二段跳
     {
         moveJump = Input.GetButtonDown("Jump");
@@ -239,27 +239,46 @@ public class Player : MonoBehaviour
                     Hitbox_use(N_hitbox_3);
                     break;
                 }
-                default:               
+            default:
                 isattack = false;
                 Hitbox_clear(N_hitbox_3);
                 Hitbox_clear(N_hitbox_2);
-                Hitbox_clear(N_hitbox_1);             
+                Hitbox_clear(N_hitbox_1);
                 break;
-                
+
         }
     }
-    public void beAttackedByBullet()//检测受到子弹的攻击
+    /*public void beAttackedByBullet()//检测受到子弹的攻击
     {
+        beattack = true;
+        GetComponent<SpriteRenderer>().color = Color.red;
         if (player_0.position.x >= farAttackEnemy.position.x)
         {
             Debug.Log("向右飞");
-            rb.AddForce(new Vector2(2000, 250), ForceMode2D.Force);
+            rb.AddForce(new Vector2(200, 5), ForceMode2D.Force);
         }
-        else if(player_0.position.x < farAttackEnemy.position.x)
+        else if (player_0.position.x < farAttackEnemy.position.x)
         {
             Debug.Log("向左飞");
-            rb.AddForce(new Vector2(-2000, 250), ForceMode2D.Force);
+            rb.AddForce(new Vector2(-200, 5), ForceMode2D.Force);
+        }*/
+    
+    public void PlayerMove()
+    {
+        if (rb.velocity.x == 0)
+            anim.SetInteger("MOVE", 0);
+        if (!isdash && rb.velocity.x != 0)
+        {
+            anim.SetInteger("MOVE", 1);
+            Debug.Log("IS MOVING");
         }
+        if (isdash)
+            anim.SetInteger("MOVE", 2);
+
+    }
+    public void PlayerBeAttacking()//碰到怪物了
+    {
+
     }
 }
    

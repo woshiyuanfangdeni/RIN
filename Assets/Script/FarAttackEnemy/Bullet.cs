@@ -31,13 +31,13 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);//销毁子弹
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollsionEnter2D(Collision2D collision)
     {
-        if(collision.tag == "Player")
+        if(collision.gameObject.tag == "Player")
         {
             Instantiate(attackEffect, transform.position, Quaternion.identity);//生成攻击特效
-            GameObject.Find("Player").GetComponent<Player>().beAttackedByBullet();//获取位置信息后被击中
-            collision.GetComponentInChildren<HpControl>().hp -= 25; //血量减少
+            //GameObject.Find("Player").GetComponent<Player>().beAttackedByBullet();//获取位置信息后被击中
+            collision.gameObject.GetComponentInChildren<HpControl>().hp -= 25; //血量减少
             Destroy(gameObject);//销毁特效
         }
     }
