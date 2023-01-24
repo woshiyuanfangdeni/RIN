@@ -35,6 +35,10 @@ public class Player : MonoBehaviour
     //以下为多段跳功能的实现
     public int jumpCount = 2;//跳跃次数
     private bool isJump;//表示跳跃状态
+    //以下为远程敌人攻击到玩家时玩家受击后撤的功能实现
+    public Transform player_0;//获取玩家的位置组件
+    public Transform farAttackEnemy;//获取敌人的位置组件
+
     public Animator anim;//静态解决方案
     public GameObject N_hitbox_1, N_hitbox_2, N_hitbox_3;
     private void Awake()
@@ -49,8 +53,6 @@ public class Player : MonoBehaviour
         inputpos = new Vector2();
         Playertran = rb.transform.localScale;
     }
-
-
     void Update()
     {
         transfor = this.gameObject.transform.position;
@@ -95,7 +97,6 @@ public class Player : MonoBehaviour
         }
         rb.transform.localScale = Playertran;
     }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         int direction_e_p = 0;
@@ -166,7 +167,6 @@ public class Player : MonoBehaviour
         }      
         anim.SetBool("isAttack", false);
     }*/
-
     void PlayerJumpByTwice()//二段跳
     {
         moveJump = Input.GetButtonDown("Jump");
@@ -174,12 +174,10 @@ public class Player : MonoBehaviour
         //我是分界线，以下为优化跳跃手感内容
         if (Input.GetButtonDown("Jump") && rb.velocity.y < 0 && jumpCount > 0)
         {
-            Debug.Log("111");
             rb.velocity = Vector2.up * 7;
         }
         else if (rb.velocity.y < 0 && !Input.GetButtonDown("Jump"))
         {
-            Debug.Log("222");
             if (jumpCount > 0) rb.velocity += Vector2.up * Physics2D.gravity.y * fallMultiplier * Time.deltaTime;
             if (jumpCount == 0) rb.gravityScale = fallMultiplier;
         }
@@ -248,6 +246,19 @@ public class Player : MonoBehaviour
                 Hitbox_clear(N_hitbox_1);             
                 break;
                 
+        }
+    }
+    public void beAttackedByBullet()//检测受到子弹的攻击
+    {
+        if (player_0.position.x >= farAttackEnemy.position.x)
+        {
+            Debug.Log("向右飞");
+            rb.AddForce(new Vector2(2000, 250), ForceMode2D.Force);
+        }
+        else if(player_0.position.x < farAttackEnemy.position.x)
+        {
+            Debug.Log("向左飞");
+            rb.AddForce(new Vector2(-2000, 250), ForceMode2D.Force);
         }
     }
 }

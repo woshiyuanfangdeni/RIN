@@ -13,8 +13,8 @@ public class E_Ai : MonoBehaviour
     float speed1 = 1.5f;
     private float tick1 = 2f;
     int temp = 1;
+    bool beattack=false;
   
-
     void Start()
     {
         rb_e = GetComponent<Rigidbody2D>();
@@ -24,7 +24,8 @@ public class E_Ai : MonoBehaviour
     void Update()
     {
         rb_e.velocity += Vector2.down * 9.8f * Time.deltaTime;
-        if (attack)
+        if(!beattack)
+        { if (attack)
         {
             rb_e.velocity = new Vector2((new Vector2((player0.position.x - rb_e.position.x),0).normalized.x)* speed1,rb_e.velocity.y);
             Vector3 enemy_scale = rb_e.transform.localScale;
@@ -42,34 +43,35 @@ public class E_Ai : MonoBehaviour
             rb_e.transform.localScale = enemy_scale;
             tick1 = 2f;
         }
-        if (!attack)
-        {
-            if (tick1 >= 0)
+            if (!attack)
             {
-                tick1 -= Time.deltaTime;
-                if (temp == 1)
+                if (tick1 >= 0)
                 {
-                    rb_e.velocity = new Vector2(1f, rb_e.velocity.y);                    
+                    tick1 -= Time.deltaTime;
+                    if (temp == 1)
+                    {
+                        rb_e.velocity = new Vector2(1f, rb_e.velocity.y);
+                    }
+                    if (temp == 0)
+                        rb_e.velocity = new Vector2(-1f, rb_e.velocity.y);
+
                 }
-                if (temp == 0)
-                rb_e.velocity = new Vector2(-1f, rb_e.velocity.y);
-                
-            }
-            else
-             
-            {
-                tick1 = 2f;
-                temp = (temp + 1) % 2;
-                Vector3 enemyscale = rb_e.transform.localScale;
-                if(temp == 1)
+                else
+
                 {
-                    enemyscale = new Vector3(Mathf.Abs(enemyscale.x) , enemyscale.y, enemyscale.z);
+                    tick1 = 2f;
+                    temp = (temp + 1) % 2;
+                    Vector3 enemyscale = rb_e.transform.localScale;
+                    if (temp == 1)
+                    {
+                        enemyscale = new Vector3(Mathf.Abs(enemyscale.x), enemyscale.y, enemyscale.z);
+                    }
+                    if (temp == 0)
+                    {
+                        enemyscale = new Vector3(Mathf.Abs(enemyscale.x) * -1, enemyscale.y, enemyscale.z);
+                    }
+                    rb_e.transform.localScale = enemyscale;
                 }
-                if(temp == 0)
-                {
-                    enemyscale = new Vector3(Mathf.Abs(enemyscale.x)*-1, enemyscale.y, enemyscale.z);
-                }    
-                rb_e.transform.localScale = enemyscale;
             }
         }
 
@@ -80,17 +82,25 @@ public class E_Ai : MonoBehaviour
     {
         if(collision.tag=="Hitbox")//Κά»χ
         {
+            beattack = true;
             if(collision.transform.position.x>this.transform.position.x)
             {
-                rb_e.AddForce(new Vector2(-100, 1) , ForceMode2D.Impulse);
+                rb_e.AddForce(new Vector2(-2, 0.4f) , ForceMode2D.Impulse);
             }
             else
             {
-                rb_e.AddForce(new Vector2(100, 1) , ForceMode2D.Impulse);
+                rb_e.AddForce(new Vector2(2, 0.4f) , ForceMode2D.Impulse);
             }
         }
     }
-  
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag=="Ground")
+        {
+            beattack=false;
+        }
+    }
+
     void Attack()
     {
 

@@ -3,7 +3,7 @@ guid: 3c41e65152eb92a41a12f6fce70131b2
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -63,6 +63,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -119,9 +120,9 @@ TextureImporter:
       name: Rain-sheet-sheet_0
       rect:
         serializedVersion: 2
-        x: 24
+        x: 26
         y: 1
-        width: 70
+        width: 68
         height: 116
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -130,8 +131,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4a4e1a879d8fde040a534b7bc265ac16
-      internalID: -671656743
+      spriteID: 052b281a9fd608e47b6afd34b2b621c6
+      internalID: 774025041
       vertices: []
       indices: 
       edges: []
@@ -151,8 +152,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3046ec78b22286445b7a0ace5e2f8651
-      internalID: -1735167760
+      spriteID: e057d281972c22542b3895d051327b42
+      internalID: 90239848
       vertices: []
       indices: 
       edges: []
@@ -172,8 +173,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bf520efed592499459de9263eed18f38
-      internalID: 1074211533
+      spriteID: a0184101081d3654aa59664cd7a84872
+      internalID: 374226829
       vertices: []
       indices: 
       edges: []
@@ -189,9 +190,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Rain-sheet-sheet_0: -671656743
-      Rain-sheet-sheet_1: -1735167760
-      Rain-sheet-sheet_2: 1074211533
+      Rain-sheet-sheet_0: 774025041
+      Rain-sheet-sheet_1: 90239848
+      Rain-sheet-sheet_2: 374226829
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
