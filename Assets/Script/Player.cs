@@ -92,6 +92,7 @@ public class Player : MonoBehaviour
                 beattack = false;
                 BeattackTime = 0.2f;
                 GetComponent<SpriteRenderer>().color = Color.white;
+                anim.SetInteger("MOVE", 0);
             }
         }
     }
@@ -273,6 +274,8 @@ public class Player : MonoBehaviour
             Debug.Log("IS MOVING");
         }
         if (isdash)
+            anim.SetInteger("MOVE", 2);
+        if (beattack)
             anim.SetInteger("MOVE", 2);
 
     }
